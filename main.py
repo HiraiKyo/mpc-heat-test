@@ -43,7 +43,8 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
   print("[LOG] Start a calculation.")
   time_base = time.time() # 基準時間
   # 初期状態出力
-  start_temp = arduino_serial.readline().replace("inner_temp", "")
+  start_line = arduino_serial.readline()
+  start_temp = start_line.decode().replace("inner_temp", "")
   writer.writerow([time.time() - time_base, 0, start_temp])
   
   i = 0
@@ -54,7 +55,7 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
     time_passed = time.time() - time_base
     # Arduinoから内部温度データ収集、フォーマット: inner_temp=[float]
     line = arduino_serial.readline()
-    temp = line.replace("inner_temp=", "")  
+    temp = line.decode().replace("inner_temp=", "")  
     # CSV書き込み
     writer.writerow([time_passed, dtl, temp])
     i = i + 1
