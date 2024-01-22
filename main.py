@@ -30,6 +30,8 @@ print("[LOG] Success.")
 
 # Arduino接続
 arduino_serial = serial.Serial(arduino_port, baudrate=baudrate, timeout=timeout)
+# arduino_serial.close()
+# arduino_serial.open() # reopenする？
 
 # CSVファイル作成
 datetime_string = datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S.%f')
@@ -44,7 +46,7 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
   time_base = time.time() # 基準時間
   # 初期状態出力
   start_line = arduino_serial.readline()
-  start_temp = start_line.decode().replace("inner_temp", "")
+  start_temp = float(start_line.decode().replace("inner_temp=", ""))
   writer.writerow([time.time() - time_base, 0, start_temp])
   
   i = 0
@@ -55,8 +57,6 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
     time_passed = time.time() - time_base
     # Arduinoから内部温度データ収集、フォーマット: inner_temp=[float]
     line = arduino_serial.readline()
-    temp = line.decode().replace("inner_temp=", "")  
+    temp = float(line.decode().replace("inner_temp=", ""))  
     # CSV書き込み
     writer.writerow([time_passed, dtl, temp])
-
-arduino_serial.close()    
