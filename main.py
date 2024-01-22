@@ -48,7 +48,7 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
   writer.writerow([time.time() - time_base, 0, start_temp])
   
   i = 0
-  for i in max_itr:
+  for i in range(max_itr):
     # 逆行列計算の実行時間を取得
     dtl = inv.cal_inv(msz)
     # 基準時間からの経過時刻を取得
@@ -58,6 +58,5 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
     temp = line.decode().replace("inner_temp=", "")  
     # CSV書き込み
     writer.writerow([time_passed, dtl, temp])
-    i = i + 1
 
 arduino_serial.close()    
