@@ -4,8 +4,10 @@ from serial.tools import list_ports
 import time
 import datetime
 import csv
+from threading import Thread
 
 import inv
+import temp
 
 # 初期化処理
 print("### Starting MPC Heat Test... ###")
@@ -29,9 +31,8 @@ max_itr = int(inifile.get("Proto1", "ITERATION"))
 print("[LOG] Success.")
 
 # Arduino接続
-arduino_serial = serial.Serial(arduino_port, baudrate=baudrate, timeout=timeout)
-# arduino_serial.close()
-# arduino_serial.open() # reopenする？
+thread_arduino = Thread(target=temp.listen_temp, kwargs=(arduino_port, baudrate, timeout))
+thread_arduino.start()
 
 # CSVファイル作成
 datetime_string = datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S.%f')
@@ -39,14 +40,13 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
   writer = csv.writer(f)
   
   # CSVヘッダー
-  writer.writerow(["経過時間", "セグメントあたり計算所要時間", "内部温度"])
+  writer.writerow(["経過時間", "イテレーションあたり計算所要時間", "内部温度"])
   
   # ベンチマークテスト開始
   print("[LOG] Start a calculation.")
   time_base = time.time() # 基準時間
   # 初期状態出力
-  start_line = arduino_serial.readline()
-  start_temp = float(start_line.decode().replace("inner_temp=", ""))
+  start_temp = temp.get_temp()
   writer.writerow([time.time() - time_base, 0, start_temp])
   
   i = 0
@@ -55,8 +55,9 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
     dtl = inv.cal_inv(msz)
     # 基準時間からの経過時刻を取得
     time_passed = time.time() - time_base
-    # Arduinoから内部温度データ収集、フォーマット: inner_temp=[float]
-    line = arduino_serial.readline()
-    temp = float(line.decode().replace("inner_temp=", ""))  
+    # Arduinoから内部温度取得
+    temp_current = temp.get_temp()
     # CSV書き込み
-    writer.writerow([time_passed, dtl, temp])
+    writer.writerow([time_passed, dtl, temp_current])
+    
+  temp.stop()
