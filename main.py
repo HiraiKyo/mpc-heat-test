@@ -51,6 +51,7 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
   
   i = 0
   for i in range(max_itr):
+    print("[LOG] イテレーション", i, "回目...")
     # 逆行列計算の実行時間を取得
     dtl = inv.cal_inv(msz)
     # 基準時間からの経過時刻を取得

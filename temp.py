@@ -10,6 +10,7 @@ def listen_temp(arduino_port, baudrate, timeout):
     temp = float(line.decode().replace("inner_temp=", ""))  
     global temp_current
     temp_current = temp
+    print("[LOG] 温度モニタ: ", temp)
     
 def get_temp():
   global temp_current
