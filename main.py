@@ -28,6 +28,7 @@ baudrate = int(inifile.get("Proto1", "BAUDRATE"))
 arduino_port = inifile.get("Proto1", "ARDUINO_PORT")
 msz = int(inifile.get("Proto1", "MATRIX_SIZE"))
 max_itr = int(inifile.get("Proto1", "ITERATION"))
+interval = int(inifile.get("Proto1", "INTERVAL"))
 print("[LOG] Success.")
 
 # Arduino接続
@@ -60,5 +61,7 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
     temp_current = temp.get_temp()
     # CSV書き込み
     writer.writerow([time_passed, dtl, temp_current])
+    # 計算間インターバル
+    time.sleep(interval)
     
   temp.stop()
