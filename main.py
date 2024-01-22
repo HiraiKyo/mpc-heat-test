@@ -32,7 +32,7 @@ print("[LOG] Success.")
 arduino_serial = serial.Serial(arduino_port, baudrate=baudrate, timeout=timeout)
 
 # CSVファイル作成
-with open('benchmark_' + "v1.0_" + datetime.datetime.now() + '.csv', 'w') as f:
+with open('benchmark_' + "v1.0_" + datetime.datetime.now().strftime() + '.csv', 'w') as f:
   writer = csv.writer(f)
   
   # CSVヘッダー
