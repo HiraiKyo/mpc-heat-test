@@ -31,7 +31,7 @@ max_itr = int(inifile.get("Proto1", "ITERATION"))
 print("[LOG] Success.")
 
 # Arduino接続
-thread_arduino = Thread(target=temp.listen_temp, kwargs=(arduino_port, baudrate, timeout))
+thread_arduino = Thread(target=temp.listen_temp, args=(arduino_port, baudrate, timeout))
 thread_arduino.start()
 
 # CSVファイル作成
