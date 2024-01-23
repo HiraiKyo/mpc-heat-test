@@ -50,21 +50,23 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
   # 初期状態出力
   start_temp = temp.get_temp()
   start_cpu_temps = cpu_temp.get_cpu_temp()
-  writer.writerow([time.time() - time_base, 0, start_temp, *start_cpu_temps])
+  writer.writerow([time.time() - time_base, 0, start_temp] + start_cpu_temps)
   
   i = 0
   for i in range(max_itr):
     print("[LOG] イテレーション", i, "回目...")
+    # CPU温度取得
+    cpu_temps = cpu_temp.get_cpu_temp()
     # 逆行列計算の実行時間を取得
     dtl = inv.cal_inv(msz)
     # 基準時間からの経過時刻を取得
     time_passed = time.time() - time_base
     # Arduinoから内部温度取得
     temp_current = temp.get_temp()
-    # CPU温度取得
-    cpu_temps = cpu_temp.get_cpu_temp()
     # CSV書き込み
-    writer.writerow([time_passed, dtl, temp_current, *cpu_temps])
+    row = [time_passed, dtl, temp_current] + cpu_temps
+    writer.writerow(row)
+    print("[LOG] " + ','.join(str(_) for _ in row))
     # 計算間インターバル
     time.sleep(interval)
     

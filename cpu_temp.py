@@ -6,5 +6,5 @@ def get_cpu_temp():
   lines = temp.split(os.linesep)
   cpus = []
   for i in range(8):
-    cpus.append(lines[3+i].split(" ")[2])
+    cpus.append(lines[3+i].split()[2])
   return cpus
