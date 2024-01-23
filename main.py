@@ -8,6 +8,7 @@ from threading import Thread
 
 import inv
 import temp
+import cpu_temp
 
 # 初期化処理
 print("### Starting MPC Heat Test... ###")
@@ -41,14 +42,15 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
   writer = csv.writer(f)
   
   # CSVヘッダー
-  writer.writerow(["経過時間", "イテレーションあたり計算所要時間", "内部温度"])
+  writer.writerow(["経過時間", "イテレーションあたり計算所要時間", "内部温度", "CPU0温度", "CPU4温度", "CPU8温度", "CPU12温度", "CPU16温度", "CPU20温度", "CPU24温度", "CPU28温度"])
   
   # ベンチマークテスト開始
   print("[LOG] Start a calculation.")
   time_base = time.time() # 基準時間
   # 初期状態出力
   start_temp = temp.get_temp()
-  writer.writerow([time.time() - time_base, 0, start_temp])
+  start_cpu_temps = cpu_temp.get_cpu_temp()
+  writer.writerow([time.time() - time_base, 0, start_temp, *start_cpu_temps])
   
   i = 0
   for i in range(max_itr):
@@ -59,8 +61,10 @@ with open('benchmark_' + "v1.0_" + datetime_string + '.csv', 'w') as f:
     time_passed = time.time() - time_base
     # Arduinoから内部温度取得
     temp_current = temp.get_temp()
+    # CPU温度取得
+    cpu_temps = cpu_temp.get_cpu_temp()
     # CSV書き込み
-    writer.writerow([time_passed, dtl, temp_current])
+    writer.writerow([time_passed, dtl, temp_current, *cpu_temps])
     # 計算間インターバル
     time.sleep(interval)
     
