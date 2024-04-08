@@ -2,6 +2,12 @@
 
 Heat testing with calculating matrix.
 
+# 当ツールのインストール方法
+
+- `./env.sh`を実行して環境構築 & 必要なパッケージのインストール
+- `settings.ini`を編集して各パラメータ設定
+- `python main.py`でテスト開始
+
 # テスト方法
 
 - 行列計算を行い、その間の内部温度データを計測
